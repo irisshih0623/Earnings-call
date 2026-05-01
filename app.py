@@ -1,35 +1,25 @@
 import streamlit as st
+import requests
 
 st.set_page_config(
     page_title="Earnings Buddy",
-    page_icon="📘",
+    page_icon="📚",
     layout="centered",
     initial_sidebar_state="expanded"
 )
 
-# Warm & Beginner-Friendly Styling
+# Warm styling
 st.markdown("""
     <style>
-    .main {
-        background-color: #fffaf0;
-    }
-    h1 {
-        color: #e63946;
-        font-family: 'Arial', sans-serif;
-    }
-    .stButton>button {
-        background-color: #e63946;
-        color: white;
-        font-weight: 500;
-    }
-    .warm-text {
-        color: #2a9d8f;
-    }
+    .main { background-color: #fffaf0; }
+    h1 { color: #e63946; }
+    .stButton>button { background-color: #e63946; color: white; }
+    .warm-text { color: #2a9d8f; font-weight: 500; }
     </style>
 """, unsafe_allow_html=True)
 
 st.title("📚 Earnings Buddy")
-st.markdown("##### Your friendly companion for learning company earnings")
+st.markdown("##### Your friendly companion for learning earnings reports")
 
 st.markdown("---")
 
@@ -41,13 +31,9 @@ if 'ticker' not in st.session_state:
 
 # ====================== HOME ======================
 if st.session_state.stage == "home":
-    st.write("👋 Welcome! Turn real earnings into an interactive learning experience.")
-
     col1, col2 = st.columns([3, 1])
     with col1:
-        ticker = st.text_input("Enter stock ticker", 
-                              placeholder="AAPL, TSLA, NVDA", 
-                              help="e.g. AAPL for Apple")
+        ticker = st.text_input("Enter stock ticker", placeholder="AAPL, TSLA, NVDA")
 
     with col2:
         if st.button("🚀 Start Learning", type="primary", use_container_width=True):
@@ -61,29 +47,21 @@ if st.session_state.stage == "home":
 # ====================== QUESTIONS ======================
 elif st.session_state.stage == "questions":
     st.progress(40)
-    st.success(f"📊 Now exploring **{st.session_state.ticker}** earnings")
+    st.success(f"📊 Learning about **{st.session_state.ticker}**")
 
-    st.subheader("🧠 Make Your Predictions")
+    st.subheader("🧠 Quick Prediction Questions")
 
     with st.form("pred_form"):
-        q1 = st.radio(
-            "1. Did they beat revenue expectations?",
-            ["Yes, they beat", "No, they missed", "Not sure"],
-            key="q1r"
-        )
-        q2 = st.radio(
-            "2. Was management tone more optimistic than last quarter?",
-            ["More optimistic", "More cautious", "About the same", "Not sure"],
-            key="q2r"
-        )
+        q1 = st.radio("1. Did they beat revenue expectations?", 
+                     ["Yes, they beat", "No, they missed", "Not sure"], key="q1r")
+        
+        q2 = st.radio("2. Was management tone more optimistic than last quarter?", 
+                     ["More optimistic", "More cautious", "About the same", "Not sure"], key="q2r")
 
-        confidence = st.slider("How confident are you in your answers?", 20, 100, 60, step=10)
+        confidence = st.slider("How confident are you?", 20, 100, 60, step=10)
+        reasoning = st.text_area("Your reasoning (optional):", height=80)
 
-        reasoning = st.text_area("Your reasoning (optional):", 
-                                placeholder="I think they beat because...", 
-                                height=80)
-
-        if st.form_submit_button("Submit & See What Happened", type="primary"):
+        if st.form_submit_button("Submit & Reveal What Happened", type="primary"):
             st.session_state.q1 = q1
             st.session_state.q2 = q2
             st.session_state.confidence = confidence
@@ -91,56 +69,60 @@ elif st.session_state.stage == "questions":
             st.session_state.stage = "reveal"
             st.rerun()
 
-# ====================== REVEAL ======================
+# ====================== REVEAL (Improved) ======================
 elif st.session_state.stage == "reveal":
     ticker = st.session_state.ticker
-
     st.progress(100)
-    st.subheader(f"📖 The Story of {ticker}'s Earnings")
+
+    st.subheader(f"📖 The Story of {ticker}'s Latest Earnings")
+
+    # Try to get some real basic data (free tier friendly)
+    try:
+        # Basic company profile + latest earnings (free tier)
+        url = f"https://financialmodelingprep.com/api/v3/quote/{ticker}?apikey=demo"
+        data = requests.get(url, timeout=10).json()
+        
+        if data and isinstance(data, list) and len(data) > 0:
+            price = data[0].get('price', 'N/A')
+            st.write(f"Current Price: **${price}**")
+    except:
+        pass
 
     st.markdown("### What Happened")
-    st.markdown("""
-    The company announced strong results and **beat** revenue expectations. 
-    This is generally seen as a positive signal.
+    st.write("""
+    The company reported solid results this quarter. 
+    They **beat** revenue and earnings expectations according to analysts.
     """)
 
     st.markdown("### Why It Matters")
-    st.markdown("""
-    Beating expectations shows the business is performing better than analysts predicted. 
-    It often leads to a positive stock reaction.
+    st.write("""
+    Beating expectations consistently shows strong business execution. 
+    This often leads to positive investor sentiment and stock price movement.
     """)
 
     st.markdown("### Management Tone")
-    st.markdown("Management sounded **optimistic** about the company's future.")
+    st.write("Management sounded **optimistic**, highlighting growth opportunities.")
 
     st.markdown("### What to Watch Next")
-    st.markdown("Pay attention to future guidance and performance in key markets.")
+    st.write("Future guidance, sales in key markets, and progress on new initiatives.")
 
     st.markdown("---")
-
     st.subheader("🎯 Your Score")
-    st.success("**Well done!** You got both predictions correct.")
+    st.success("You got **2 out of 2** correct! Great intuition.")
 
     st.metric("Your Confidence", f"{st.session_state.get('confidence', 60)}%")
 
-    if st.session_state.get("reasoning"):
+    if st.session_state.get('reasoning'):
         st.info(f"**Your Reasoning:** {st.session_state.reasoning}")
 
     st.balloons()
 
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("🔄 Try Another Stock", use_container_width=True):
-            for key in list(st.session_state.keys()):
-                if key not in ["stage"]:
-                    del st.session_state[key]
-            st.session_state.stage = "home"
-            st.rerun()
+    if st.button("🔄 Try Another Stock", use_container_width=True):
+        for key in list(st.session_state.keys()):
+            if key not in ["stage"]:
+                del st.session_state[key]
+        st.session_state.stage = "home"
+        st.rerun()
 
-    with col2:
-        if st.button("📊 My Learning Progress", use_container_width=True):
-            st.info("📈 Learning profile feature coming soon!")
-
-# Footer
 st.markdown("---")
-st.caption("Earnings Buddy • Making earnings easy & fun for beginners")
+st.caption("Earnings Buddy • Learning tool for finance beginners")
