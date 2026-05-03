@@ -1,5 +1,4 @@
 import streamlit as st
-import requests
 
 st.set_page_config(page_title="Earnings Buddy", page_icon="📚", layout="centered")
 
@@ -11,111 +10,121 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-FMP_API_KEY = "vlQFRsXkDEzfAx8drx2ThJi6X92XY30k"
-
 st.title("📚 Earnings Buddy")
-st.markdown("##### Your friendly guide to understanding earnings reports")
+st.markdown("##### Learn earnings by industry & company")
 
 st.markdown("---")
 
+# Data - You can edit this easily
+industries = {
+    "Technology": {
+        "AAPL": {"name": "Apple Inc.", "content": "Latest Earnings: Strong iPhone sales and services growth. Beat expectations. Management optimistic on AI features."},
+        "NVDA": {"name": "NVIDIA", "content": "Explosive demand for AI chips. Massive beat on revenue and guidance."},
+        "MSFT": {"name": "Microsoft", "content": "Cloud and AI (Azure + OpenAI) driving strong growth."},
+        "GOOGL": {"name": "Alphabet (Google)", "content": "Search and YouTube solid. Cloud improving."},
+        "AMZN": {"name": "Amazon", "content": "AWS cloud and e-commerce showing resilience."}
+    },
+    "Energy": {
+        "XOM": {"name": "ExxonMobil", "content": "Oil prices stable. Strong cash flow from upstream."},
+        "CVX": {"name": "Chevron", "content": "Solid production and dividend growth."},
+        # Add more as you like
+    },
+    "Luxury": {
+        "LVMUY": {"name": "LVMH", "content": "Demand in Asia recovering."},
+        # Add more
+    },
+    "Industrials": {
+        "GE": {"name": "GE Aerospace", "content": "Strong orders in aviation."},
+    },
+    "Financials": {
+        "JPM": {"name": "JPMorgan Chase", "content": "Record revenue from investment banking."},
+    }
+}
+
 if 'stage' not in st.session_state:
-    st.session_state.stage = "home"
-if 'ticker' not in st.session_state:
-    st.session_state.ticker = ""
+    st.session_state.stage = "industry"
+if 'selected_industry' not in st.session_state:
+    st.session_state.selected_industry = None
+if 'selected_company' not in st.session_state:
+    st.session_state.selected_company = None
 
-# HOME
-if st.session_state.stage == "home":
-    col1, col2 = st.columns([3, 1])
-    with col1:
-        ticker = st.text_input("Enter stock ticker symbol", placeholder="AAPL, TSLA, NVDA")
-    with col2:
-        if st.button("🚀 Start Learning", type="primary", use_container_width=True):
-            if ticker.strip():
-                st.session_state.ticker = ticker.upper().strip()
-                st.session_state.stage = "questions"
+# STAGE 1: Choose Industry
+if st.session_state.stage == "industry":
+    st.subheader("Step 1: Choose an Industry")
+    cols = st.columns(3)
+    for i, industry in enumerate(industries.keys()):
+        with cols[i % 3]:
+            if st.button(industry, use_container_width=True):
+                st.session_state.selected_industry = industry
+                st.session_state.stage = "company"
                 st.rerun()
-            else:
-                st.error("Please enter a ticker!")
 
-# QUESTIONS
-elif st.session_state.stage == "questions":
-    st.progress(40)
-    st.success(f"📊 Learning about **{st.session_state.ticker}**")
+# STAGE 2: Choose Company
+elif st.session_state.stage == "company":
+    industry = st.session_state.selected_industry
+    st.subheader(f"Step 2: Choose a company in **{industry}**")
 
-    with st.form("pred_form"):
-        q1 = st.radio("1. Did they beat revenue expectations this quarter?", ["Yes, they beat", "No, they missed", "Not sure"])
-        q2 = st.radio("2. Was management tone more optimistic than last quarter?", ["More optimistic", "More cautious", "About the same", "Not sure"])
-        confidence = st.slider("How confident are you?", 20, 100, 60, step=10)
-        reasoning = st.text_area("Your reasoning (optional):", height=120)
+    companies = industries[industry]
+    cols = st.columns(3)
+    for i, (ticker, info) in enumerate(companies.items()):
+        with cols[i % 3]:
+            if st.button(info["name"], use_container_width=True):
+                st.session_state.selected_company = ticker
+                st.session_state.stage = "earnings"
+                st.rerun()
 
-        if st.form_submit_button("Submit Predictions & Reveal Results", type="primary"):
-            st.session_state.q1 = q1
-            st.session_state.q2 = q2
-            st.session_state.confidence = confidence
-            st.session_state.reasoning = reasoning
-            st.session_state.stage = "reveal"
-            st.rerun()
+    if st.button("← Back to Industries"):
+        st.session_state.stage = "industry"
+        st.rerun()
 
-# REVEAL - Richer Story
-elif st.session_state.stage == "reveal":
-    ticker = st.session_state.ticker
-    st.progress(100)
-    st.subheader(f"📖 The Story of {ticker}'s Latest Earnings")
+# STAGE 3: Earnings Info + Questions
+elif st.session_state.stage == "earnings":
+    ticker = st.session_state.selected_company
+    industry = st.session_state.selected_industry
+    info = industries[industry][ticker]
 
-    # Fetch basic info
-    with st.spinner("Fetching company info..."):
-        try:
-            url = f"https://financialmodelingprep.com/api/v3/profile/{ticker}?apikey={FMP_API_KEY}"
-            data = requests.get(url, timeout=10).json()
-            if data and isinstance(data, list) and len(data) > 0:
-                company = data[0]
-                st.write(f"**{company.get('companyName')}** ({ticker})")
-                st.write(f"Sector: {company.get('sector')} | Industry: {company.get('industry')}")
-        except:
-            st.caption(f"Learning about {ticker}")
+    st.subheader(f"{info['name']} ({ticker}) - Latest Earnings")
 
-    st.markdown("### What Happened")
-    st.write("""
-    In the most recent quarter, **{}** reported revenue and earnings that **beat** Wall Street's expectations. 
-    This is a positive signal that the business is performing better than analysts predicted.
-    """.format(ticker))
+    st.markdown("### Key Financial Metrics & Highlights")
+    st.write(info["content"])   # ← You write your own content here
 
-    st.markdown("### Why It Matters")
-    st.write("""
-    When a company consistently beats expectations, investors gain more confidence in its future. 
-    It often leads to a rise in the stock price in the short term and shows strong management execution.
-    """)
+    st.markdown("### Your Prediction")
+    prediction = st.text_area("What do you think will happen to the stock price after this earnings? Why?", height=150)
 
-    st.markdown("### Management Tone")
-    st.write("""
-    During the earnings call, management usually sounds **optimistic** when they beat numbers. 
-    They highlight growth areas and future plans to reassure investors.
-    """)
+    if st.button("Submit Prediction & See Analysis"):
+        st.session_state.prediction = prediction
+        st.session_state.stage = "analysis"
+        st.rerun()
 
-    st.markdown("### What to Watch Next")
-    st.write("""
-    - Next quarter's guidance
-    - Sales performance in key markets (e.g. China for Apple)
-    - Progress on new products or services (e.g. AI features)
-    - Overall industry trends
-    """)
+    if st.button("← Back"):
+        st.session_state.stage = "company"
+        st.rerun()
 
-    st.markdown("---")
-    st.subheader("🎯 Your Score")
-    st.success("**Excellent!** You got both predictions correct.")
+# STAGE 4: Analysis
+elif st.session_state.stage == "analysis":
+    ticker = st.session_state.selected_company
+    info = industries[st.session_state.selected_industry][ticker]
 
-    st.metric("Your Confidence", f"{st.session_state.get('confidence', 60)}%")
-    if st.session_state.get('reasoning'):
-        st.info(f"**Your Reasoning:** {st.session_state.reasoning}")
+    st.subheader(f"Analysis for {info['name']}")
 
-    st.balloons()
+    st.markdown("### Actual Price Movement")
+    st.write("**Post-earnings reaction:** +2.8% in the first trading day (example).")
 
-    if st.button("🔄 Try Another Stock", use_container_width=True):
+    st.markdown("### Possible Factors")
+    st.write("- Beat on revenue and EPS\n- Strong guidance\n- Market sentiment on AI / sector trends")
+
+    st.markdown("### What the Market is Discussing")
+    st.write("Analysts are focusing on long-term growth drivers...")
+
+    st.markdown("### Peer Comparison")
+    st.write("Compared to peers in the same industry, this company performed better/worse in...")
+
+    if st.button("Try Another Company"):
         for key in list(st.session_state.keys()):
             if key not in ["stage"]:
                 del st.session_state[key]
-        st.session_state.stage = "home"
+        st.session_state.stage = "industry"
         st.rerun()
 
 st.markdown("---")
-st.caption("Earnings Buddy • Beginner-friendly learning tool")
+st.caption("Earnings Buddy • Add your own content in the industries dictionary")
