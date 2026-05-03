@@ -15,32 +15,74 @@ st.markdown("##### Learn earnings by industry & company")
 
 st.markdown("---")
 
-# Data - You can edit this easily
+# ================== YOUR CONTENT HERE ==================
 industries = {
     "Technology": {
-        "AAPL": {"name": "Apple Inc.", "content": "Latest Earnings: Strong iPhone sales and services growth. Beat expectations. Management optimistic on AI features."},
-        "NVDA": {"name": "NVIDIA", "content": "Explosive demand for AI chips. Massive beat on revenue and guidance."},
-        "MSFT": {"name": "Microsoft", "content": "Cloud and AI (Azure + OpenAI) driving strong growth."},
-        "GOOGL": {"name": "Alphabet (Google)", "content": "Search and YouTube solid. Cloud improving."},
-        "AMZN": {"name": "Amazon", "content": "AWS cloud and e-commerce showing resilience."}
+        "NVDA": {
+            "name": "NVIDIA (NVDA)",
+            "content": """**Latest:** Q4 FY2026 (ended Jan 25, 2026), reported Feb 25, 2026
+
+**Key financial metrics:** Record quarterly revenue $68.1B (+73% YoY); Data Center $62.3B (+75% YoY); Strong gross margins (~75%).
+
+**Management highlights:** CEO Jensen Huang highlighted the "agentic AI inflection point", surging adoption of Blackwell/Rubin platforms, and massive demand from hyperscalers.
+
+**Price movement:** Mixed/sank ~5% initially despite beat — concerns over valuation and competition.
+
+**Market discussion:** AI leadership validated but debates on bubble risks and sustainability of growth."""
+        },
+        "AAPL": {
+            "name": "Apple (AAPL)",
+            "content": """**Latest:** Q2 FY2026 (ended March 28, 2026), reported April 30, 2026
+
+**Key financial metrics:** Revenue $111.2B (+17% YoY), record March quarter; iPhone strong; Services record.
+
+**Management highlights:** Tim Cook cited extraordinary iPhone demand, AI features, and services momentum. Upbeat guidance + buyback.
+
+**Price movement:** Positive — rose ~3-5%.
+
+**Market discussion:** Relief on hardware recovery and AI integration roadmap."""
+        },
+        "GOOGL": {
+            "name": "Alphabet (GOOGL)",
+            "content": """**Latest:** Q1 2026 (ended March 31, 2026)
+
+**Key financial metrics:** Revenue $109.9B (+22% YoY); Google Cloud strong growth.
+
+**Management highlights:** Strong AI momentum with Gemini and cloud backlog.
+
+**Price movement:** Strong surge (~10%).
+
+**Market discussion:** AI spending paying off."""
+        },
+        "MSFT": {
+            "name": "Microsoft (MSFT)",
+            "content": """**Latest:** Q3 FY2026 (ended March 31, 2026)
+
+**Key financial metrics:** Revenue $82.9B (+18% YoY); Azure +40%.
+
+**Management highlights:** Emphasis on AI/cloud demand and Copilot adoption.
+
+**Price movement:** Dipped slightly post-earnings.
+
+**Market discussion:** Solid execution but capex concerns."""
+        },
+        "AMZN": {
+            "name": "Amazon (AMZN)",
+            "content": """**Latest:** Q1 2026 (ended March 31, 2026)
+
+**Key financial metrics:** Net sales $181.5B (+17% YoY); AWS strong growth.
+
+**Management highlights:** AWS AI acceleration and retail efficiency.
+
+**Price movement:** Mixed/volatile.
+
+**Market discussion:** Positive on AI/cloud momentum but capex focus."""
+        }
     },
-    "Energy": {
-        "XOM": {"name": "ExxonMobil", "content": "Oil prices stable. Strong cash flow from upstream."},
-        "CVX": {"name": "Chevron", "content": "Solid production and dividend growth."},
-        # Add more as you like
-    },
-    "Luxury": {
-        "LVMUY": {"name": "LVMH", "content": "Demand in Asia recovering."},
-        # Add more
-    },
-    "Industrials": {
-        "GE": {"name": "GE Aerospace", "content": "Strong orders in aviation."},
-    },
-    "Financials": {
-        "JPM": {"name": "JPMorgan Chase", "content": "Record revenue from investment banking."},
-    }
+    # You can add more industries here later
 }
 
+# ================== APP LOGIC ==================
 if 'stage' not in st.session_state:
     st.session_state.stage = "industry"
 if 'selected_industry' not in st.session_state:
@@ -48,83 +90,50 @@ if 'selected_industry' not in st.session_state:
 if 'selected_company' not in st.session_state:
     st.session_state.selected_company = None
 
-# STAGE 1: Choose Industry
+# Stage 1: Industry
 if st.session_state.stage == "industry":
     st.subheader("Step 1: Choose an Industry")
-    cols = st.columns(3)
-    for i, industry in enumerate(industries.keys()):
-        with cols[i % 3]:
-            if st.button(industry, use_container_width=True):
-                st.session_state.selected_industry = industry
-                st.session_state.stage = "company"
-                st.rerun()
+    for industry in industries.keys():
+        if st.button(industry, use_container_width=True):
+            st.session_state.selected_industry = industry
+            st.session_state.stage = "company"
+            st.rerun()
 
-# STAGE 2: Choose Company
+# Stage 2: Company
 elif st.session_state.stage == "company":
     industry = st.session_state.selected_industry
-    st.subheader(f"Step 2: Choose a company in **{industry}**")
+    st.subheader(f"Step 2: Companies in **{industry}**")
 
-    companies = industries[industry]
-    cols = st.columns(3)
-    for i, (ticker, info) in enumerate(companies.items()):
-        with cols[i % 3]:
-            if st.button(info["name"], use_container_width=True):
-                st.session_state.selected_company = ticker
-                st.session_state.stage = "earnings"
-                st.rerun()
+    for ticker, data in industries[industry].items():
+        if st.button(data["name"], use_container_width=True):
+            st.session_state.selected_company = ticker
+            st.session_state.stage = "earnings"
+            st.rerun()
 
     if st.button("← Back to Industries"):
         st.session_state.stage = "industry"
         st.rerun()
 
-# STAGE 3: Earnings Info + Questions
+# Stage 3: Earnings + Questions
 elif st.session_state.stage == "earnings":
-    ticker = st.session_state.selected_company
     industry = st.session_state.selected_industry
-    info = industries[industry][ticker]
+    ticker = st.session_state.selected_company
+    data = industries[industry][ticker]
 
-    st.subheader(f"{info['name']} ({ticker}) - Latest Earnings")
-
-    st.markdown("### Key Financial Metrics & Highlights")
-    st.write(info["content"])   # ← You write your own content here
+    st.subheader(data["name"])
+    st.markdown("### Latest Earnings Summary")
+    st.write(data["content"])
 
     st.markdown("### Your Prediction")
     prediction = st.text_area("What do you think will happen to the stock price after this earnings? Why?", height=150)
 
-    if st.button("Submit Prediction & See Analysis"):
+    if st.button("Submit Prediction"):
         st.session_state.prediction = prediction
-        st.session_state.stage = "analysis"
-        st.rerun()
+        st.success("Prediction saved! (Analysis section coming soon)")
 
-    if st.button("← Back"):
+    if st.button("← Back to Companies"):
         st.session_state.stage = "company"
         st.rerun()
 
-# STAGE 4: Analysis
-elif st.session_state.stage == "analysis":
-    ticker = st.session_state.selected_company
-    info = industries[st.session_state.selected_industry][ticker]
-
-    st.subheader(f"Analysis for {info['name']}")
-
-    st.markdown("### Actual Price Movement")
-    st.write("**Post-earnings reaction:** +2.8% in the first trading day (example).")
-
-    st.markdown("### Possible Factors")
-    st.write("- Beat on revenue and EPS\n- Strong guidance\n- Market sentiment on AI / sector trends")
-
-    st.markdown("### What the Market is Discussing")
-    st.write("Analysts are focusing on long-term growth drivers...")
-
-    st.markdown("### Peer Comparison")
-    st.write("Compared to peers in the same industry, this company performed better/worse in...")
-
-    if st.button("Try Another Company"):
-        for key in list(st.session_state.keys()):
-            if key not in ["stage"]:
-                del st.session_state[key]
-        st.session_state.stage = "industry"
-        st.rerun()
-
 st.markdown("---")
-st.caption("Earnings Buddy • Add your own content in the industries dictionary")
+st.caption("Earnings Buddy • Edit the 'industries' dictionary in the code to add more content")
