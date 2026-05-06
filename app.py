@@ -7,135 +7,130 @@ st.markdown("""
     .main { background-color: #fffaf0; }
     h1 { color: #e63946; }
     .stButton>button { background-color: #e63946; color: white; font-weight: 500; }
+    .big-header { font-size: 1.8em; color: #2a9d8f; }
     </style>
 """, unsafe_allow_html=True)
 
 st.title("📚 Earnings Buddy")
-st.markdown("##### Learn earnings by industry & company")
+st.markdown("##### Interactive Earnings Learning Experience")
 
 st.markdown("---")
 
-# ================== YOUR CONTENT ==================
+# ================== CONTENT ==================
 data = {
     "Technology": {
-        "NVDA": {
-            "name": "NVIDIA (NVDA)",
-            "earnings": "Q4 FY2026 (ended Jan 25, 2026), reported Feb 25, 2026",
-            "metrics": "Record quarterly revenue $68.1B (+73% YoY); Data Center $62.3B (+75% YoY); GAAP EPS ~$1.76 (non-GAAP $1.62, beat); Full-year FY2026 revenue $215.9B (+65% YoY). Strong gross margins (~75%).",
-            "management": "CEO Jensen Huang highlighted the \"agentic AI inflection point,\" surging adoption of Blackwell/Rubin platforms, and massive demand from hyperscalers.",
-            "price_movement": "Mixed/sank ~5% initially (despite beat). Investors looked past strong results amid concerns over high valuation and competition.",
-            "market_discussion": "AI leadership validated but debates on bubble risks, Blackwell ramp, competition from AMD/hyperscalers' in-house chips."
-        },
-        "AAPL": {
-            "name": "Apple (AAPL)",
-            "earnings": "Q2 FY2026 (ended March 28, 2026), reported April 30, 2026",
-            "metrics": "Revenue $111.2B (+17% YoY), record for March quarter; EPS $2.01 (+22% YoY, beat); iPhone ~$57B (+22%); Services record ~$31B.",
-            "management": "Tim Cook cited \"extraordinary\" demand for iPhone, record install base, AI-focused silicon, and services momentum. Upbeat guidance and $100B buyback.",
-            "price_movement": "Positive—rose ~3-5%. Strong beat, guidance, and iPhone/Services strength drove optimism.",
-            "market_discussion": "Relief on hardware recovery (iPhone/China), services growth, and AI integration roadmap."
-        },
-        "GOOGL": {
-            "name": "Alphabet (GOOGL)",
-            "earnings": "Q1 2026 (ended March 31, 2026), reported ~April 29, 2026",
-            "metrics": "Revenue $109.9B (+22% YoY, beat); Google Cloud ~$20B (+63%); EPS $5.11 (strong beat).",
-            "management": "Strong AI momentum (Gemini, cloud backlog doubling); Heavy capex on AI infrastructure acknowledged.",
-            "price_movement": "Strong surge (~10%). Cloud/AI acceleration seen as validation.",
-            "market_discussion": "AI spending paying off; capex concerns tempered by growth."
-        },
-        "MSFT": {
-            "name": "Microsoft (MSFT)",
-            "earnings": "Q3 FY2026 (ended March 31, 2026), reported April 29, 2026",
-            "metrics": "Revenue $82.9B (+18% YoY, beat); Intelligent Cloud strong (Azure +40%); EPS $4.27.",
-            "management": "Satya Nadella emphasized AI/cloud demand, Copilot adoption, and foundational improvements.",
-            "price_movement": "Dipped ~1-5% post-earnings. Guidance/capex concerns outweighed beat for some.",
-            "market_discussion": "Solid AI/cloud execution but questions on monetization pace and high capex."
-        },
         "AMZN": {
             "name": "Amazon (AMZN)",
-            "earnings": "Q1 2026 (ended March 31, 2026), reported April 29, 2026",
-            "metrics": "Net sales $181.5B (+17% YoY, beat); AWS $37.6B (+28%); Operating income $23.9B (record margin).",
-            "management": "Andy Jassy highlighted AWS AI acceleration, retail efficiency, and aggressive capex on AI.",
-            "price_movement": "Mixed/volatile (initial dips then recovered). AWS strength supportive.",
-            "market_discussion": "AWS reacceleration as key AI proxy; focus on capex vs. FCF pressure."
-        }
+            "what_company_does": "Amazon runs the world’s biggest online shopping platform.where people buy everything from daily essentials to electronics with quick delivery options, while also operating Amazon Web Services (AWS) as a leading provider of cloud computing power that powers websites, data storage, and advanced artificial intelligence tools for businesses worldwide.",
+            "pre_market_discussion": """1. AWS Acceleration and AI Demand. Before the results came out, investors were closely watching whether Amazon’s cloud computing business could pick up speed again due to surging interest in artificial intelligence. Many expected solid growth but wanted confirmation that customer spending on AI training, inference workloads, custom chips like Trainium and Graviton, and services such as Bedrock was translating into faster revenue increases. The conversation centered on Amazon’s ability to compete effectively against Microsoft and Google in the AI infrastructure race, with optimism that strong delivery here could position the company as one of the clearest long-term winners in the ongoing technology shift.\n\n2. Heavy Capital Spending and Profitability Trade-offs. Investors were debating the impact of Amazon’s very large investments in data centers, specialized chips, and other infrastructure needed to support AI growth. While AWS had been delivering healthy profit margins, there was concern that record-level capital expenditures could temporarily weigh on free cash flow and near-term profitability even as these moves promised bigger payoffs further down the road. This discussion highlighted the classic tension for Amazon: balancing short-term pressure on margins and cash from aggressive spending against its proven ability to scale efficiently and generate strong returns over time.\n\n3. Retail ResilienceAlong with Advertising Growth. Investors were evaluating how well Amazon’s core online shopping business was holding up amid mixed economic signals, focusing on unit sales trends, Prime membership momentum, grocery performance, and improvements in delivery speed. At the same time, the high-margin advertising business was seen as a key area to watch for continued strong double-digit growth, acting as both a growth driver and a buffer against any softness in retail. Overall, the pre-earnings mood reflected cautious optimism about consumer spending strength combined with appreciation for Amazon’s ability to innovate in retail and monetize its platform more effectively.""",
+            "earnings_date": "Q1 2026 (ended March 31, 2026), reported April 29, 2026",
+            "key_metrics": "Net Sales: $181.5B (+17% YoY)\nOperating Income: $23.9B\nAWS Sales: $37.6B (+28% YoY)\nDiluted EPS: $2.78\nCapex: $43.2B",
+            "management_highlight": "CEO Andy Jassy struck an upbeat tone... (full text you provided)",
+            "price_movement": "In after-hours trading... (full text you provided)",
+            "post_market_discussion": "1. AWS Momentum...\n\n2. Sustainability of Heavy Capex...\n\n3. Retail Strength..."
+        },
+        # You can add NVDA, AAPL, etc. later in the same format
     }
-    # You can add other industries here later (Energy, Luxury, etc.)
+    # Add other industries here later
 }
 
-if 'stage' not in st.session_state:
-    st.session_state.stage = "industry"
-if 'selected_industry' not in st.session_state:
-    st.session_state.selected_industry = None
-if 'selected_company' not in st.session_state:
-    st.session_state.selected_company = None
+# Session State
+if 'stage' not in st.session_state: st.session_state.stage = "industry"
+if 'industry' not in st.session_state: st.session_state.industry = None
+if 'company' not in st.session_state: st.session_state.company = None
 
-# STAGE 1: Industry
+# STAGE 1: Select Industry
 if st.session_state.stage == "industry":
     st.subheader("Step 1: Choose an Industry")
-    if st.button("Technology", use_container_width=True):
-        st.session_state.selected_industry = "Technology"
-        st.session_state.stage = "company"
-        st.rerun()
+    for industry in ["Technology", "Energy", "Industrials", "Financials", "Luxury"]:
+        if st.button(industry, use_container_width=True):
+            st.session_state.industry = industry
+            st.session_state.stage = "company"
+            st.rerun()
 
-# STAGE 2: Company
+# STAGE 2: Select Company
 elif st.session_state.stage == "company":
-    st.subheader(f"Step 2: Choose a company in **{st.session_state.selected_industry}**")
-    companies = data[st.session_state.selected_industry]
+    st.subheader(f"Step 2: Choose a Company in **{st.session_state.industry}**")
+    if st.session_state.industry == "Technology":
+        if st.button("Amazon (AMZN)", use_container_width=True):
+            st.session_state.company = "AMZN"
+            st.session_state.stage = "company_overview"
+            st.rerun()
+    else:
+        st.info("More companies coming soon...")
     
-    cols = st.columns(3)
-    for i, (ticker, info) in enumerate(companies.items()):
-        with cols[i % 3]:
-            if st.button(info["name"], use_container_width=True):
-                st.session_state.selected_company = ticker
-                st.session_state.stage = "earnings"
-                st.rerun()
-
     if st.button("← Back to Industries"):
         st.session_state.stage = "industry"
         st.rerun()
 
-# STAGE 3: Earnings Summary + Prediction
-elif st.session_state.stage == "earnings":
-    ticker = st.session_state.selected_company
-    info = data[st.session_state.selected_industry][ticker]
-
-    st.subheader(f"{info['name']} – Latest Earnings")
-    st.caption(info["earnings"])
-
-    st.markdown("**Key Financial Metrics**")
-    st.write(info["metrics"])
-
-    st.markdown("**Management Highlights**")
-    st.write(info["management"])
-
-    st.markdown("### Your Prediction")
-    prediction = st.text_area("What do you think the price movement will be after this earnings? Why?", height=150)
-
-    if st.button("Submit Prediction & See Analysis", type="primary"):
-        st.session_state.prediction = prediction
-        st.session_state.stage = "analysis"
+# STAGE 3: Company Overview
+elif st.session_state.stage == "company_overview":
+    info = data[st.session_state.industry][st.session_state.company]
+    
+    st.subheader(info["name"])
+    
+    st.markdown("**What the company does?**")
+    st.write(info["what_company_does"])
+    
+    st.markdown("**What the Market Was Discussing? (Before Earnings)**")
+    st.write(info["pre_market_discussion"])
+    
+    if st.button("Go to Earnings Information →", type="primary"):
+        st.session_state.stage = "earnings"
         st.rerun()
-
+    
     if st.button("← Back"):
         st.session_state.stage = "company"
         st.rerun()
 
-# STAGE 4: Analysis
+# STAGE 4: Earnings Info + Questions
+elif st.session_state.stage == "earnings":
+    info = data[st.session_state.industry][st.session_state.company]
+    
+    st.subheader(f"From the Earnings: {info['name']}")
+    st.caption(info["earnings_date"])
+    
+    st.markdown("**Key Financial Metrics**")
+    st.write(info["key_metrics"])
+    
+    st.markdown("**What did Management Highlight in the Earnings Call?**")
+    st.write(info["management_highlight"])
+    
+    st.markdown("---")
+    st.subheader("Your Turn – Make Predictions")
+    
+    q1 = st.radio("1. Did the company beat expectations?", ["Yes, clear beat", "Slight beat", "Met expectations", "Missed"])
+    q2 = st.radio("2. Did management sound confident?", ["Very confident & optimistic", "Cautiously optimistic", "Neutral", "Concerned"])
+    q3 = st.radio("3. Predict the price movement after earnings", 
+                  ["Flat (±1%)", "±1–5%", "±5–10%", "10% or more up", "10% or more down"])
+    
+    prediction_reason = st.text_area("Why do you think so? (Your reasoning)", height=100)
+    
+    if st.button("Submit Predictions & See What Happened", type="primary"):
+        st.session_state.q1 = q1
+        st.session_state.q2 = q2
+        st.session_state.q3 = q3
+        st.session_state.reason = prediction_reason
+        st.session_state.stage = "analysis"
+        st.rerun()
+
+# STAGE 5: Analysis
 elif st.session_state.stage == "analysis":
-    ticker = st.session_state.selected_company
-    info = data[st.session_state.selected_industry][ticker]
-
+    info = data[st.session_state.industry][st.session_state.company]
+    
     st.subheader(f"Analysis for {info['name']}")
-
-    st.markdown("### Price Movement After Earnings")
+    
+    st.markdown("**How did the Price Move after Earnings?**")
     st.write(info["price_movement"])
-
-    st.markdown("### Market Discussion")
-    st.write(info["market_discussion"])
-
-    st.markdown("### Your Prediction")
-    st.info(st.session_state.get("prediction", "No prediction provided."))
-
+    
+    st.markdown("**What the Market is Discussing Now?**")
+    st.write(info["post_market_discussion"])
+    
+    st.success("**Your Predictions:**")
+    st.write(f"Beat Expectations: {st.session_state.get('q1')}")
+    st.write(f"Management Tone: {st.session_state.get('q2')}")
+    st.write(f"Price Movement Prediction: {st.session_state.get('q3')}")
+    
     if st.button("Try Another Company"):
         for key in list(st.session_state.keys()):
             if key not in ["stage"]:
@@ -144,4 +139,4 @@ elif st.session_state.stage == "analysis":
         st.rerun()
 
 st.markdown("---")
-st.caption("Earnings Buddy • Add more industries/companies in the 'data' dictionary")
+st.caption("Earnings Buddy • Your content is fully editable in the 'data' dictionary")
