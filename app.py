@@ -1335,12 +1335,36 @@ elif st.session_state.stage == "analysis":
         st.info(f"**Your Reasoning:** {reason}")
     
     st.markdown("<br>", unsafe_allow_html=True)
-    if st.button("Try Another Company", use_container_width=True):
-        for key in list(st.session_state.keys()):
-            if key not in ["stage"]:
-                del st.session_state[key]
-        st.session_state.stage = "industry"
-        st.rerun()
+    # Two buttons side by side
+    col_left, col_right = st.columns(2)
+    with col_left:
+        if st.button("🔄 Try Another Company", use_container_width=True):
+            for key in list(st.session_state.keys()):
+                if key not in ["stage"]:
+                    del st.session_state[key]
+            st.session_state.stage = "industry"
+            st.rerun()
+    with col_right:
+        if st.button("📊 Peer Comparison", use_container_width=True):
+            st.session_state.show_peer_toast = True
+    
+    # "Coming soon" message shown below the buttons
+    if st.session_state.get("show_peer_toast"):
+        st.markdown("""
+        <div style="
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 1px solid #f59e0b;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-top: 12px;
+            text-align: center;
+            color: #78350f;
+            font-weight: 500;
+        ">
+            🚧 <b>Peer Comparison — Coming Soon!</b><br>
+            <span style="font-size: 0.9em;">Stay tuned: soon you'll be able to compare this company side-by-side with its industry peers across revenue, margins, valuation, and growth.</span>
+        </div>
+        """, unsafe_allow_html=True)
 
 st.markdown("---")
 st.caption("Earnings Buddy • Informational Purpose Only • Not Investment Advice")
