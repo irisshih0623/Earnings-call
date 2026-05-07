@@ -212,9 +212,9 @@ if st.session_state.stage == "industry":
     industries = [
         ("💻  Technology", "Technology", True),
         ("⚡  Energy", "Energy", True),
-        ("🏭  Industrials  🚧  Coming Soon", "Industrials", False),
-        ("💰  Financials  🚧  Coming Soon", "Financials", False),
-        ("💎  Luxury  🚧  Coming Soon", "Luxury", False),
+        ("🏭  Industrials   Coming Soon", "Industrials", False),
+        ("💰  Financials   Coming Soon", "Financials", False),
+        ("💎  Luxury  Coming Soon", "Luxury", False),
     ]
 
     for label, value, available in industries:
@@ -2562,7 +2562,7 @@ elif st.session_state.stage == "analysis":
             color: #78350f;
             font-weight: 500;
         ">
-            🚧 <b>Peer Comparison — Coming Soon!</b><br>
+            <b>Peer Comparison — Coming Soon!</b><br>
             <span style="font-size: 0.9em;">Stay tuned: soon you'll be able to compare this company side-by-side with its industry peers across revenue, margins, valuation, and growth.</span>
         </div>
         """, unsafe_allow_html=True)
