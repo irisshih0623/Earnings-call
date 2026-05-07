@@ -7,7 +7,59 @@ st.markdown("""
     <style>
     .main { background-color: #fffaf0; }
     h1 { color: #e63946; }
-    .stButton>button { background-color: #e63946; color: white; font-weight: 500; }
+
+    /* ---------- Enhanced Button Styling ---------- */
+    .stButton>button {
+        background: linear-gradient(135deg, #e63946 0%, #d62828 100%);
+        color: white;
+        font-weight: 600;
+        padding: 16px 22px;
+        border-radius: 12px;
+        border: none;
+        font-size: 1.02em;
+        box-shadow: 0 2px 6px rgba(230, 57, 70, 0.25);
+        transition: all 0.2s ease;
+        text-align: left;
+    }
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(230, 57, 70, 0.35);
+        background: linear-gradient(135deg, #f94144 0%, #e63946 100%);
+    }
+    .stButton>button:active { transform: translateY(0); }
+    .stButton>button:focus { box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.3); outline: none; }
+
+    /* Disabled "Coming Soon" buttons */
+    .stButton>button:disabled {
+        background: #f3f4f6 !important;
+        color: #9ca3af !important;
+        box-shadow: none !important;
+        cursor: not-allowed !important;
+        border: 1px dashed #d1d5db !important;
+    }
+    .stButton>button:disabled:hover {
+        transform: none !important;
+        background: #f3f4f6 !important;
+    }
+
+    /* Step header styling */
+    .step-header {
+        background: linear-gradient(135deg, #fff7ed, #ffedd5);
+        border-left: 5px solid #f97316;
+        padding: 14px 18px;
+        border-radius: 10px;
+        margin-bottom: 18px;
+    }
+    .step-number {
+        font-size: 0.78em;
+        font-weight: 700;
+        letter-spacing: 2px;
+        color: #ea580c;
+        text-transform: uppercase;
+    }
+    .step-title { font-size: 1.25em; font-weight: 700; color: #1f2937; margin-top: 2px; }
+    .step-sub { font-size: 0.88em; color: #6b7280; margin-top: 4px; }
+
     .section-header {
         font-size: 1.4em;
         color: #2a9d8f;
@@ -127,46 +179,16 @@ st.markdown("---")
 
 # ================== COMPANY DATA ==================
 companies = {
-    "AMZN": {
-        "name": "Amazon (AMZN)",
-        "earnings_date": "Q1 2026 (ended March 31, 2026) — Reported April 29, 2026",
-    },
-    "TSLA": {
-        "name": "Tesla (TSLA)",
-        "earnings_date": "Q1 2026 (ended March 31, 2026) — Reported April 22, 2026 (after-market)",
-    },
-    "MSFT": {
-        "name": "Microsoft (MSFT)",
-        "earnings_date": "Q3 FY2026 (ended March 31, 2026) — Reported April 29, 2026 (after-market)",
-    },
-    "NVDA": {
-        "name": "NVIDIA (NVDA)",
-        "earnings_date": "Q4 FY2026 (ended January 25, 2026) — Reported February 25, 2026 (after-market)",
-    },
-    "TSM": {
-        "name": "Taiwan Semiconductor (TSM)",
-        "earnings_date": "Q1 2026 (ended March 31, 2026) — Reported April 29, 2026",
-    },
-    "BE": {
-        "name": "Bloom Energy (BE)",
-        "earnings_date": "Q1 2026 (ended March 31, 2026) — Reported April 28, 2026 (after-market)",
-    },
-    "IREN": {
-        "name": "IREN Ltd (IREN)",
-        "earnings_date": "Q2 2026 (ended December 31, 2025) — Reported February 5, 2026",
-    },
-    "SNDK": {
-        "name": "SanDisk (SNDK)",
-        "earnings_date": "Q3 2026 (ended April 3, 2026) — Reported April 30, 2026",
-    },
-    "CRWV": {
-        "name": "CoreWeave (CRWV)",
-        "earnings_date": "Q4 2025 (ended December 31, 2025) — Reported February 26, 2026 (after-market)",
-    },
-    "LITE": {
-        "name": "Lumentum (LITE)",
-        "earnings_date": "Q3 2026 (ended March 28, 2026) — Reported May 6, 2026 (after-market)",
-    },
+    "AMZN": {"name": "Amazon (AMZN)", "earnings_date": "Q1 2026 (ended March 31, 2026) — Reported April 29, 2026"},
+    "TSLA": {"name": "Tesla (TSLA)", "earnings_date": "Q1 2026 (ended March 31, 2026) — Reported April 22, 2026 (after-market)"},
+    "MSFT": {"name": "Microsoft (MSFT)", "earnings_date": "Q3 FY2026 (ended March 31, 2026) — Reported April 29, 2026 (after-market)"},
+    "NVDA": {"name": "NVIDIA (NVDA)", "earnings_date": "Q4 FY2026 (ended January 25, 2026) — Reported February 25, 2026 (after-market)"},
+    "TSM": {"name": "Taiwan Semiconductor (TSM)", "earnings_date": "Q1 2026 (ended March 31, 2026) — Reported April 29, 2026"},
+    "BE": {"name": "Bloom Energy (BE)", "earnings_date": "Q1 2026 (ended March 31, 2026) — Reported April 28, 2026 (after-market)"},
+    "IREN": {"name": "IREN Ltd (IREN)", "earnings_date": "Q2 2026 (ended December 31, 2025) — Reported February 5, 2026"},
+    "SNDK": {"name": "SanDisk (SNDK)", "earnings_date": "Q3 2026 (ended April 3, 2026) — Reported April 30, 2026"},
+    "CRWV": {"name": "CoreWeave (CRWV)", "earnings_date": "Q4 2025 (ended December 31, 2025) — Reported February 26, 2026 (after-market)"},
+    "LITE": {"name": "Lumentum (LITE)", "earnings_date": "Q3 2026 (ended March 28, 2026) — Reported May 6, 2026 (after-market)"},
 }
 
 # ================== SESSION STATE ==================
@@ -179,26 +201,50 @@ if 'company' not in st.session_state: st.session_state.company = None
 # STAGE 1: Select Industry
 # ============================================================
 if st.session_state.stage == "industry":
-    st.subheader("Step 1: Choose an Industry")
-    for industry in ["Technology", "Energy", "Industrials", "Financials", "Luxury"]:
-        if st.button(industry, use_container_width=True):
-            st.session_state.industry = industry
-            st.session_state.stage = "company"
-            st.rerun()
+    st.markdown("""
+    <div class="step-header">
+        <div class="step-number">Step 1 of 5</div>
+        <div class="step-title">Choose an Industry</div>
+        <div class="step-sub">Pick a sector to explore the companies inside.</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    industries = [
+        ("💻  Technology", "Technology", True),
+        ("⚡  Energy", "Energy", True),
+        ("🏭  Industrials  🚧  Coming Soon", "Industrials", False),
+        ("💰  Financials  🚧  Coming Soon", "Financials", False),
+        ("💎  Luxury  🚧  Coming Soon", "Luxury", False),
+    ]
+
+    for label, value, available in industries:
+        if available:
+            if st.button(label, use_container_width=True, key=f"ind_{value}"):
+                st.session_state.industry = value
+                st.session_state.stage = "company"
+                st.rerun()
+        else:
+            st.button(label, use_container_width=True, key=f"ind_{value}", disabled=True)
 
 # ============================================================
 # STAGE 2: Select Company
 # ============================================================
 elif st.session_state.stage == "company":
-    st.subheader(f"Step 2: Choose a Company in **{st.session_state.industry}**")
+    st.markdown(f"""
+    <div class="step-header">
+        <div class="step-number">Step 2 of 5</div>
+        <div class="step-title">Choose a Company in {st.session_state.industry}</div>
+        <div class="step-sub">Pick a company to dive into its latest earnings story.</div>
+    </div>
+    """, unsafe_allow_html=True)
     
     if st.session_state.industry == "Technology":
         tech_companies = [
-            ("Amazon (AMZN)", "AMZN"),
-            ("Tesla (TSLA)", "TSLA"),
-            ("Microsoft (MSFT)", "MSFT"),
-            ("NVIDIA (NVDA)", "NVDA"),
-            ("Taiwan Semiconductor (TSM)", "TSM"),
+            ("🛒  Amazon (AMZN)", "AMZN"),
+            ("🚗  Tesla (TSLA)", "TSLA"),
+            ("💻  Microsoft (MSFT)", "MSFT"),
+            ("🎮  NVIDIA (NVDA)", "NVDA"),
+            ("🏭  Taiwan Semiconductor (TSM)", "TSM"),
         ]
         for label, ticker in tech_companies:
             if st.button(label, use_container_width=True, key=f"btn_{ticker}"):
@@ -207,11 +253,11 @@ elif st.session_state.stage == "company":
                 st.rerun()
     elif st.session_state.industry == "Energy":
         energy_companies = [
-            ("Bloom Energy (BE)", "BE"),
-            ("IREN Ltd (IREN)", "IREN"),
-            ("SanDisk (SNDK)", "SNDK"),
-            ("CoreWeave (CRWV)", "CRWV"),
-            ("Lumentum (LITE)", "LITE"),
+            ("⚡  Bloom Energy (BE)", "BE"),
+            ("💧  IREN Ltd (IREN)", "IREN"),
+            ("💾  SanDisk (SNDK)", "SNDK"),
+            ("☁️  CoreWeave (CRWV)", "CRWV"),
+            ("💡  Lumentum (LITE)", "LITE"),
         ]
         for label, ticker in energy_companies:
             if st.button(label, use_container_width=True, key=f"btn_{ticker}"):
@@ -221,7 +267,8 @@ elif st.session_state.stage == "company":
     else:
         st.info("More companies will be added soon!")
     
-    if st.button("← Back to Industries"):
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("← Back to Industries", key="back_industries"):
         st.session_state.stage = "industry"
         st.rerun()
 
@@ -1793,18 +1840,35 @@ elif st.session_state.stage == "earnings":
         </div>
         """, unsafe_allow_html=True)
     
-    # -------- Questions (shared) --------
+    # -------- Questions (shared — UPDATED) --------
     st.markdown("---")
-    st.subheader("Your Predictions")
+    st.subheader("💭 Your Predictions")
+    st.caption("Reflect on what you just read and share your take.")
     
-    q1 = st.radio("1. Did the company beat expectations?", ["Yes, clear beat", "Slight beat", "Met expectations", "Missed"])
-    q2 = st.radio("2. Did management sound confident?", ["Very confident & optimistic", "Cautiously optimistic", "Neutral", "Concerned"])
-    q3 = st.radio("3. Predict price movement after earnings", ["Flat (±1%)", "±1–5%", "±5–10%", "10%+ Up", "10%+ Down"])
+    q1 = st.radio(
+        "1. Based on what you just read, would you invest in this company?",
+        ["Yes", "No", "Neutral"],
+        horizontal=True
+    )
     
-    reason = st.text_area("Why do you think so?", height=120)
+    q2 = st.text_area(
+        "2. Why?",
+        height=120,
+        placeholder="Share your reasoning — what stood out to you from the earnings? What concerns you? What excites you?"
+    )
+    
+    q3 = st.radio(
+        "3. If the company reported strong earnings, what do you think happened to the stock price the next day?",
+        [
+            "📈 Went up significantly (more than 5%)",
+            "🔼 Went up slightly (0–5%)",
+            "🔽 Went down slightly (0–5%)",
+            "📉 Went down significantly (more than 5%)",
+        ]
+    )
     
     if st.button("Submit Predictions & See Results", type="primary", use_container_width=True):
-        st.session_state.answers = (q1, q2, q3, reason)
+        st.session_state.answers = (q1, q2, q3)
         st.session_state.stage = "analysis"
         st.rerun()
 
@@ -2460,15 +2524,16 @@ elif st.session_state.stage == "analysis":
         </div>
         """, unsafe_allow_html=True)
     
-    # -------- User predictions recap (shared) --------
+    # -------- User predictions recap (UPDATED) --------
     st.markdown("<br>", unsafe_allow_html=True)
     st.success("**Your Predictions**")
-    q1, q2, q3, reason = st.session_state.answers
-    st.write(f"**1. Beat Expectations:** {q1}")
-    st.write(f"**2. Management Tone:** {q2}")
-    st.write(f"**3. Price Movement:** {q3}")
-    if reason:
-        st.info(f"**Your Reasoning:** {reason}")
+    q1, q2, q3 = st.session_state.answers
+    st.write(f"**1. Would you invest in this company?** {q1}")
+    if q2:
+        st.info(f"**2. Your Reasoning:** {q2}")
+    else:
+        st.write("**2. Your Reasoning:** _(not provided)_")
+    st.write(f"**3. Your predicted price movement after strong earnings:** {q3}")
     
     st.markdown("<br>", unsafe_allow_html=True)
     # Two buttons side by side
